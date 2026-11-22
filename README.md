@@ -78,3 +78,20 @@ El modelo actual aún no incluye categoría ni fecha.
 | `DELETE /tasks/:id` | Eliminar una tarea |
 
 La API es una propuesta para una etapa futura. Estas rutas aún no están conectadas a un servidor.
+
+## API de tareas
+
+TaskFlow consulta la API remota `https://jsonplaceholder.typicode.com/todos?userId=2` mediante `TaskApiService` y conserva el repositorio remoto en `main.dart`.
+
+Los campos recibidos se asignan así:
+
+| Campo de la API | Campo de `Task` |
+|---|---|
+| `id` | `id` |
+| `title` | `title` |
+| `completed` | `isCompleted` |
+| `userId` | `userId` |
+
+La API no incluye `description` ni `priority`, por lo que TaskFlow usa `Sin descripción (API)` y `Sin prioridad (API)` como valores por defecto.
+
+Marcar una tarea como completada o pendiente modifica únicamente la copia local mantenida por `TasksViewModel` y el repositorio configurado en la aplicación.
