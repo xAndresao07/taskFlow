@@ -95,3 +95,14 @@ Los campos recibidos se asignan así:
 La API no incluye `description` ni `priority`, por lo que TaskFlow usa `Sin descripción (API)` y `Sin prioridad (API)` como valores por defecto.
 
 Marcar una tarea como completada o pendiente modifica únicamente la copia local mantenida por `TasksViewModel` y el repositorio configurado en la aplicación.
+
+## Estados de carga y evidencia
+
+La pantalla de tareas escucha `TasksViewModel` con `context.watch` y usa `context.read` para iniciar cargas y reintentos. Mientras se consulta la API aparece un indicador de carga; cuando la respuesta contiene tareas, se muestra la lista remota. Una respuesta vacía muestra el estado vacío y una consulta fallida muestra un mensaje con la acción **Reintentar**. La lista ya cargada se conserva si falla una actualización.
+
+Para reproducir y capturar cada estado:
+
+1. **Lista / éxito:** ejecuta la aplicación con conexión a internet. La API remota devuelve las tareas del usuario 2; captura la lista una vez que termine la carga.
+2. **Carga:** pulsa el botón de actualizar o desliza hacia abajo en la lista y captura el indicador mientras la solicitud está en curso. Como la solicitud puede terminar rápido, repítelo si hace falta.
+3. **Vacío:** cambia temporalmente `TaskApiService.userId` de `2` a `999` en `lib/features/tasks/data/task_api_service.dart`, reinicia la aplicación y captura el mensaje de lista vacía. Después restaura el valor `2`.
+4. **Error y recuperación:** sin conexión a internet, pulsa actualizar para mostrar el error y captura esa pantalla. Restablece la conexión y pulsa **Reintentar**; la lista remota debe volver a mostrarse sin reiniciar la aplicación. Captura también la lista recuperada.

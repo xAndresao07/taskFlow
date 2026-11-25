@@ -12,8 +12,10 @@ class TasksViewModel extends ChangeNotifier {
   String? errorMessage;
 
   List<Task> get tasks => List.unmodifiable(_tasks);
+  bool get isEmpty => !isLoading && errorMessage == null && _tasks.isEmpty;
 
   Future<void> loadTasks() async {
+    if (isLoading) return;
     isLoading = true;
     errorMessage = null;
     notifyListeners();
@@ -40,7 +42,6 @@ class TasksViewModel extends ChangeNotifier {
   void toggleCompleted(int id) {
     final current = findTask(id);
     if (current == null) return;
-
     final updated = current.copyWith(isCompleted: !current.isCompleted);
     _repository.save(updated);
     _tasks = [
